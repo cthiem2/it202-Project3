@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<style>
+			#map {
+				height: 100%;
+			}
+		</style>
+		
+		<link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" type="text/css">
+   		<link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+		
+	</head>
+	
+	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		
+		<div id="map" style="width:100px; hight: 100px" ></div>
+		
+		<script>
+		  var map;
+		  function initMap() {
+			map = new google.maps.Map(document.getElementById('map'), {
+			  center: {lat: 41.8781, lng: -87.6298},
+			  zoom: 12
+			});
+			  console.log("hi");
+		  }
+		</script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPZpb1MxzSDJCOQXiBjH9sYeS1Qqm94qs&callback=initMap"async defer></script>
+
+		
+		
+		<ul id="temp_list" class="mdc-list mdc-list--two-line" aria-orientation="vertical" style="display:none">
+		  <li class="mdc-list-item">
+			<span class="mdc-list-item__text">
+			  <span id="text1" class="mdc-list-item__primary-text">First-line text</span>
+			  <span id="text2" class="mdc-list-item__secondary-text">Second-line text</span>
+			  
+			</span>
+			<span class="mdc-list-item__meta ">
+			  <button data-mdc-auto-init="MDCIconButtonToggle" id="add-to-favorites"
+				   class="mdc-icon-button"
+				   aria-label="Add to favorites"
+				   aria-hidden="true"
+				   aria-pressed="false">
+				   <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">favorite</i>
+				   <i class="material-icons mdc-icon-button__icon">favorite_border</i>
+				</button>
+			</span>
+		  </li>
+		</ul>
+
+		
+		<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+		
+ 		
+ 		<script>
+			$.ajax({
+				url: "https://data.cityofchicago.org/resource/psqp-6rmg.json",
+				type: "GET",
+				data: {
+				  "$limit" : 100
+				}
+			}).done(function(data) {
+			  alert("Retrieved " + data.length + " records from the dataset!");
+			  
+				$.each(data, function(k,v){
+					var clone = $("#temp_list").clone();
+					clone.show(true);
+					clone.find("#text1").text(v.name_);
+					clone.find("#text2").text(v.address);
+					$("body").append(clone);
+				});
+			});
+			window.mdc.autoInit();
+		</script>
+
+			<!-- at the bottom of the page -->
+		<script type="text/javascript">
+		  
+
+			document.getElementById("add-to-favorites").addEventListener('MDCIconButtonToggle:change', ({detail}) => {
+			  console.log(detail);
+			});
+
+			  $("button").on("click", function(e) {
+
+				if ($(this).find("i.mdc-icon-button__icon--on").css("display") == "none") {
+				  console.log("it's off");
+				} else {
+				  console.log("it's on");
+				}
+			  });
+		</script>
+
+
+		
+<!-- 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPZpb1MxzSDJCOQXiBjH9sYeS1Qqm94qs&callback=initMap"async defer></script> -->
+	</body>
+</html>
