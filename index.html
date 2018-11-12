@@ -6,6 +6,11 @@
 			#map {
 				height: 100%;
 			}
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			  }
 		</style>
 		
 		<link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" type="text/css">
@@ -23,19 +28,36 @@
 	<body>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		
-		<div id="map" style="width:100px; hight: 100px" ></div>
+		<div id="map"></div>
 		
 		<script>
-		  var map;
-		  function initMap() {
-			map = new google.maps.Map(document.getElementById('map'), {
-			  center: {lat: 41.8781, lng: -87.6298},
-			  zoom: 12
-			});
-			  console.log("maps");
-		  }
+			var loc = {
+				lat: 0.0,
+				long: 0.0
+			}
+			
+			navigator.geolocation.getCurrentPosition(callBack);
+				
+				
+
+			function callBack(pos){
+				loc.lat = pos.coords.latitude;
+				loc.long = pos.coords.longitude;
+				console.log(loc.lat);
+				console.log(loc.long);
+				initMap
+			  var map;
+			  function initMap() {
+				map = new google.maps.Map(document.getElementById('map'), {
+				  center: {lat: (loc.lat), lng: (loc.long)},
+				  zoom: 12
+				});
+				  console.log("maps");
+			  }
+				
+			}
 		</script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPZpb1MxzSDJCOQXiBjH9sYeS1Qqm94qs&callback=initMap"async defer></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPZpb1MxzSDJCOQXiBjH9sYeS1Qqm94qs"async defer></script>
 
 		
 		
@@ -83,8 +105,9 @@
 					clone.onClick = addFavorite;
 					$("body").append(clone);
 				});
+				window.mdc.autoInit();
 			});
-			window.mdc.autoInit();
+			
 		</script>
 
 			<!-- at the bottom of the page -->
@@ -92,11 +115,11 @@
 		  
 			
 			function addFavorite(){
-				document.getElementsByIdStartsWith("add-to-favorites").addEventListener('MDCIconButtonToggle:change', ({detail}) => {
+				document.getElementsByClassName("mdc-icon-button").addEventListener('MDCIconButtonToggle:change', ({detail}) => {
 				  console.log(detail);
 				});
 
-				  $("button").on("click", function(e) {
+				  $(".mdc-icon-button").on("click", function(e) {
 
 					if ($(this).find("i.mdc-icon-button__icon--on").css("display") == "none") {
 					  console.log("it's off");
@@ -110,6 +133,6 @@
 
 
 		
-<!-- 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPZpb1MxzSDJCOQXiBjH9sYeS1Qqm94qs&callback=initMap"async defer></script> -->
+<!-- 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPZpb1MxzSDJCOQXiBjH9sYeS1Qqm94qs"async defer></script> -->
 	</body>
 </html>
