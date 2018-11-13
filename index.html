@@ -135,7 +135,8 @@
 			<!-- at the bottom of the page -->
 		<script type="text/javascript">
 		  
-			$(".mdc-icon-button").click(function() {
+			$(".mdc-icon-button").on("click", function() {
+				console.log("clicked");
 				var name = $("this").attr("id");
 				var obj = CoordArr.filter(function(c) { 
 					return c.name == name; 
