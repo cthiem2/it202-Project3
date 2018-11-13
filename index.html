@@ -19,7 +19,7 @@
 		<script>
 			var db = new Dexie("favorites_db");
 			db.version(1).stores({
-			  favorites: 'name,address'
+			  favorites: 'name, address'
 			});
 		</script>
 		
@@ -45,7 +45,7 @@
 				loc.long = pos.coords.longitude;
 				console.log(loc.lat);
 				console.log(loc.long);
-				initMap
+				initMap();
 			  var map;
 			  function initMap() {
 				map = new google.maps.Map(document.getElementById('map'), {
@@ -54,6 +54,11 @@
 				});
 				  console.log("maps");
 			  }
+				var marker = new google.maps.Marker({
+					position: {lat: loc.lat, lng: loc.long},
+					map: map,
+					title: 'Chicago'
+				  });
 				
 			}
 		</script>
@@ -86,7 +91,9 @@
 		
  		
  		<script>
-			var i = 0;
+			
+			var CoordArr = [];
+			//var i = 0;
 			$.ajax({
 				url: "https://data.cityofchicago.org/resource/psqp-6rmg.json",
 				type: "GET",
@@ -97,12 +104,27 @@
 			  //alert("Retrieved " + data.length + " records from the dataset!");
 			  
 				$.each(data, function(k,v){
+					CoordArr.push({
+						name: v.name_,
+						lat: v.location.coordinates[0],
+						long: v.location.coordinates[1],
+						inDB: false
+					});
+					
 					var clone = $("#temp_list").clone();
 					clone.show(true);
 					clone.find("#text1").text(v.name_);
 					clone.find("#text2").text(v.address);
-					clone.id = "add-to-favorites" + ++i;
-					clone.onClick = addFavorite;
+					//clone.id = "add-to-favorites" + ++i;
+					clone.find(".mdc-icon-button").attr("id", v.name_);
+					//clone.find(".mdc-icon-button").onClick = addFavorite;
+					//console.log(clone.id);
+// 					$(clone.find(".mdc-icon-button")).click(function() {
+// 						this.addEventListener('MDCIconButtonToggle:change', ({detail}) => {
+// 							console.log(detail);
+
+// 						});
+// 					});
 					$("body").append(clone);
 				});
 				window.mdc.autoInit();
@@ -113,21 +135,19 @@
 			<!-- at the bottom of the page -->
 		<script type="text/javascript">
 		  
-			
-			function addFavorite(){
-				document.getElementsByClassName("mdc-icon-button").addEventListener('MDCIconButtonToggle:change', ({detail}) => {
-				  console.log(detail);
+			$(".mdc-icon-button").click(function() {
+				var name = $("this").attr("id");
+				var obj = CoordArr.filter(function(c) { 
+					return c.name == name; 
 				});
-
-				  $(".mdc-icon-button").on("click", function(e) {
-
-					if ($(this).find("i.mdc-icon-button__icon--on").css("display") == "none") {
-					  console.log("it's off");
-					} else {
-					  console.log("it's on");
-					}
+				console.log(obj);
+				var marker = new google.maps.Marker({
+					position: {lat: obj[0].lat, lng: obj[0].long},
+					map: map,
+					title: 'Chicago'
 				  });
-			}
+			});
+
 			
 		</script>
 
